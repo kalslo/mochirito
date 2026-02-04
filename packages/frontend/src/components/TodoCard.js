@@ -1,10 +1,14 @@
 import React, { useState } from 'react';
+import { isOverdue, getDurationText } from '../utils/dateUtils';
 
 function TodoCard({ todo, onToggle, onEdit, onDelete, isLoading }) {
   const [isEditing, setIsEditing] = useState(false);
   const [editTitle, setEditTitle] = useState(todo.title);
   const [editDueDate, setEditDueDate] = useState(todo.dueDate || '');
   const [editError, setEditError] = useState(null);
+
+  // Calculate overdue status
+  const todoIsOverdue = isOverdue(todo.dueDate, todo.completed);
 
   const handleToggle = async () => {
     try {
@@ -54,7 +58,10 @@ function TodoCard({ todo, onToggle, onEdit, onDelete, isLoading }) {
 
   const formatDate = (dateString) => {
     if (!dateString) return null;
-    const date = new Date(dateString);
+    // Parse date string directly to avoid timezone issues
+    // Input format is YYYY-MM-DD
+    const [year, month, day] = dateString.split('-');
+    const date = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
     return date.toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'long',
@@ -107,7 +114,7 @@ function TodoCard({ todo, onToggle, onEdit, onDelete, isLoading }) {
   }
 
   return (
-    <div className={`todo-card ${todo.completed ? 'completed' : ''}`}>
+    <div className={`todo-card ${todo.completed ? 'completed' : ''} ${todoIsOverdue ? 'overdue' : ''}`}>
       <input
         type="checkbox"
         checked={todo.completed === 1}
@@ -118,7 +125,15 @@ function TodoCard({ todo, onToggle, onEdit, onDelete, isLoading }) {
       />
 
       <div className="todo-content">
-        <h3 className="todo-title">{todo.title}</h3>
+        <h3 className="todo-title">
+          {todoIsOverdue && <span className="overdue-icon" aria-label="Overdue">⚠️</span>}
+          {todo.title}
+        </h3>
+        {todoIsOverdue && (
+          <p className="todo-overdue-duration">
+            {getDurationText(todo.dueDate)}
+          </p>
+        )}
         {todo.dueDate && (
           <p className="todo-due-date">
             Due: {formatDate(todo.dueDate)}

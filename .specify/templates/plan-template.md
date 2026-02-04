@@ -31,7 +31,21 @@
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-[Gates determined based on constitution file]
+Verify compliance with the following principles from `.specify/memory/constitution.md`:
+
+- [ ] **Code Quality**: Solution follows DRY, KISS, SOLID principles with clear single responsibilities
+- [ ] **Test-Driven Development**: Testing strategy defined with 80%+ coverage target, tests before/alongside implementation
+- [ ] **Component Architecture**: Clear separation between UI components, services, and utilities
+- [ ] **Simplicity and Scope**: Feature aligns with core requirements, no premature optimization or speculative features
+- [ ] **Design Consistency**: Follows Material Design principles with defined theme, spacing, and accessibility standards (if UI changes)
+- [ ] **Error Handling**: All async operations have error handling with user feedback
+- [ ] **Monorepo Organization**: Changes respect packages/frontend and packages/backend boundaries
+
+**Complexity Justification Required If**:
+- Adding new dependencies not in current stack
+- Introducing architectural patterns beyond current structure
+- Deviating from established conventions
+- Adding features outside functional requirements scope
 
 ## Project Structure
 
